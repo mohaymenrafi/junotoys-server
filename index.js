@@ -39,6 +39,14 @@ async function run() {
       res.send(result);
     });
 
+    // Post to get products by id
+    app.post('/products/bykeys', async (req, res) => {
+      const keys = req.body;
+      const query = { _id: { $in: keys } };
+      const products = await productsCollection.find(query).toArray();
+      res.send(products);
+    });
+
     // post reviews to db
     app.post('/feedbacks', async (req, res) => {
       const userFeedback = req.body;
