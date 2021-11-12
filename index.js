@@ -47,6 +47,22 @@ async function run() {
       res.send(products);
     });
 
+    // Post orders
+    app.post('/orders', async (req, res) => {
+      const userOrder = req.body;
+      const order = {
+        name: userOrder.name,
+        email: userOrder.email,
+        phone: userOrder.phone,
+        address: userOrder.address,
+        zipcode: userOrder.zipcode,
+        city: userOrder.city,
+        state: userOrder.state,
+        country: userOrder.country,
+        productName: userOrder.productName,
+      };
+    });
+
     // post reviews to db
     app.post('/feedbacks', async (req, res) => {
       const userFeedback = req.body;
