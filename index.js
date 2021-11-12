@@ -23,6 +23,7 @@ async function run() {
     const database = client.db('juno');
     const productsCollection = database.collection('products');
     const feedbacksCollection = database.collection('feedbacks');
+    const ordersCollection = database.collection('orders');
 
     // get products
     app.get('/products', async (req, res) => {
@@ -61,6 +62,8 @@ async function run() {
         country: userOrder.country,
         productName: userOrder.productName,
       };
+      const result = await ordersCollection.insertOne(order);
+      res.json(result);
     });
 
     // post reviews to db
