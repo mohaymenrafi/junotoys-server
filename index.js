@@ -1,14 +1,14 @@
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
+const { MongoClient } = require('mongodb');
+const { ObjectId } = require('mongodb');
 
 const port = process.env.PORT || 5000;
 const app = express();
 // middleware
 app.use(cors());
 app.use(express.json());
-
-const { MongoClient } = require('mongodb');
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.y5cda.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, {
@@ -95,6 +95,33 @@ async function run() {
       } else {
         res.send(orders);
       }
+    });
+
+    // Delete Order
+    app.delete('/orders/:id', async (req, res) => {
+      const { id } = req.params;
+      const query = { _id: ObjectId(id) };
+      const result = await ordersCollection.deleteOne(query);
+      res.send(result);
+    });
+
+    // Update Order status
+    app.put('/orders/:id', async (req, res) => {
+      const { id } = req.params;
+      const status = req.body;
+      const filter = { _id: ObjectId(id) };
+      const options = { upsert: true };
+      const updatedStatus = {
+        $set: {
+          status: status.status,
+        },
+      };
+      const result = await ordersCollection.updateOne(
+        filter,
+        updatedStatus,
+        options
+      );
+      res.json(result);
     });
 
     // post reviews to db
