@@ -57,6 +57,14 @@ async function run() {
       res.send(result);
     });
 
+    // delete products
+    app.delete('/products/:id', async (req, res) => {
+      const { id } = req.params;
+      const query = { _id: ObjectId(id) };
+      const result = await productsCollection.deleteOne(query);
+      res.send(result);
+    });
+
     // Post to get products by id
     app.post('/products/bykeys', async (req, res) => {
       const keys = req.body;
