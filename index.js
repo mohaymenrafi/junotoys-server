@@ -165,6 +165,20 @@ async function run() {
       const newUser = await usersCollection.insertOne(dbUser);
       res.json(newUser);
     });
+
+    // users post to db for google signin
+    app.put('/users', async (req, res) => {
+      const dbUser = req.body;
+      const query = { email: dbUser.email };
+      const options = { upsert: true };
+      const udpateUser = { $set: dbUser };
+      const result = await usersCollection.updateOne(
+        query,
+        udpateUser,
+        options
+      );
+      res.json(result);
+    });
   } finally {
     // await client.close()
   }
