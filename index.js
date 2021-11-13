@@ -44,6 +44,8 @@ async function run() {
         sku: product,
         rating: product,
       };
+      const result = await productsCollection.insertOne(addProduct);
+      res.json(result);
     });
 
     // get products with id
@@ -85,8 +87,14 @@ async function run() {
 
     // get orders
     app.get('/orders', async (req, res) => {
+      const { email } = req.query;
       const orders = await ordersCollection.find({}).toArray();
-      res.send(orders);
+      if (email) {
+        const personalOrder = orders.filter((order) => order.email === email);
+        res.send(personalOrder);
+      } else {
+        res.send(orders);
+      }
     });
 
     // post reviews to db
