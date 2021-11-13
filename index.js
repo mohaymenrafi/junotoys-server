@@ -32,6 +32,20 @@ async function run() {
       res.send(result);
     });
 
+    // post products
+    app.post('/products', async (req, res) => {
+      const product = req.body;
+      const addProduct = {
+        name: product,
+        price: product,
+        shortDesc1: product,
+        shortDesc2: product,
+        longDesc: product,
+        sku: product,
+        rating: product,
+      };
+    });
+
     // get products with id
     app.get('/products/:id', async (req, res) => {
       const { id } = req.params;
@@ -61,6 +75,8 @@ async function run() {
         state: userOrder.state,
         country: userOrder.country,
         productName: userOrder.productName,
+        price: userOrder.price,
+        status: userOrder.status,
       };
       const result = await ordersCollection.insertOne(order);
       res.json(result);
