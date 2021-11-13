@@ -77,21 +77,21 @@ async function run() {
     // Post orders
     app.post('/orders', async (req, res) => {
       const userOrder = req.body;
-      const order = {
-        name: userOrder.name,
-        email: userOrder.email,
-        phone: userOrder.phone,
-        address: userOrder.address,
-        zipcode: userOrder.zipcode,
-        city: userOrder.city,
-        state: userOrder.state,
-        country: userOrder.country,
-        productName: userOrder.productName,
-        price: userOrder.price,
-        img: userOrder.img,
-        status: userOrder.status,
-      };
-      const result = await ordersCollection.insertOne(order);
+      // const order = {
+      //   name: userOrder.name,
+      //   email: userOrder.email,
+      //   phone: userOrder.phone,
+      //   address: userOrder.address,
+      //   zipcode: userOrder.zipcode,
+      //   city: userOrder.city,
+      //   state: userOrder.state,
+      //   country: userOrder.country,
+      //   productName: userOrder.productName,
+      //   price: userOrder.price,
+      //   img: userOrder.img,
+      //   status: userOrder.status,
+      // };
+      const result = await ordersCollection.insertOne(userOrder);
       res.json(result);
     });
 
@@ -137,13 +137,13 @@ async function run() {
     // post reviews to db
     app.post('/feedbacks', async (req, res) => {
       const userFeedback = req.body;
-      const review = {
-        name: userFeedback.name,
-        email: userFeedback.email,
-        feedback: userFeedback.feedback,
-        productName: userFeedback.productName,
-      };
-      const result = await feedbacksCollection.insertOne(review);
+      // const review = {
+      //   name: userFeedback.name,
+      //   email: userFeedback.email,
+      //   feedback: userFeedback.feedback,
+      //   productName: userFeedback.productName,
+      // };
+      const result = await feedbacksCollection.insertOne(userFeedback);
       res.json(result);
     });
     // get reviews api
