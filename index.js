@@ -36,13 +36,14 @@ async function run() {
     app.post('/products', async (req, res) => {
       const product = req.body;
       const addProduct = {
-        name: product,
-        price: product,
-        shortDesc1: product,
-        shortDesc2: product,
-        longDesc: product,
-        sku: product,
-        rating: product,
+        name: product.name,
+        price: product.price,
+        shortDesc1: product.shortDesc1,
+        shortDesc2: product.shortDesc2,
+        longDesc: product.longDesc,
+        sku: product.sku,
+        rating: product.rating,
+        img: product.img,
       };
       const result = await productsCollection.insertOne(addProduct);
       res.json(result);
