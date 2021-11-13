@@ -76,6 +76,7 @@ async function run() {
         country: userOrder.country,
         productName: userOrder.productName,
         price: userOrder.price,
+        img: userOrder.img,
         status: userOrder.status,
       };
       const result = await ordersCollection.insertOne(order);
