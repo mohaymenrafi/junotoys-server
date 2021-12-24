@@ -1,5 +1,5 @@
 {
-  "name": "juno-toys-server",
+  "name": "juno-server",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -14,7 +14,8 @@
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
-    "mongodb": "^4.1.4"
+    "mongodb": "^4.1.4",
+    "stripe": "^8.195.0"
   },
   "devDependencies": {
     "@babel/core": "^7.15.8",

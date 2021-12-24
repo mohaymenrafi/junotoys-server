@@ -3,6 +3,7 @@ const cors = require('cors');
 require('dotenv').config();
 const { MongoClient } = require('mongodb');
 const { ObjectId } = require('mongodb');
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 const port = process.env.PORT || 5000;
 const app = express();
@@ -15,7 +16,6 @@ const client = new MongoClient(uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
-console.log(uri);
 
 async function run() {
   try {
@@ -66,10 +66,11 @@ async function run() {
       res.send(result);
     });
 
-    // Post to get products by id
-    app.post('/products/bykeys', async (req, res) => {
+    // Post to get products by id (for cart)
+    app.post('/products/byKeys/', async (req, res) => {
       const keys = req.body;
-      const query = { _id: { $in: keys } };
+      const newKeys = keys.map((key) => ObjectId(key));
+      const query = { _id: { $in: newKeys } };
       const products = await productsCollection.find(query).toArray();
       res.send(products);
     });
@@ -77,23 +78,14 @@ async function run() {
     // Post orders
     app.post('/orders', async (req, res) => {
       const userOrder = req.body;
-      // const order = {
-      //   name: userOrder.name,
-      //   email: userOrder.email,
-      //   phone: userOrder.phone,
-      //   address: userOrder.address,
-      //   zipcode: userOrder.zipcode,
-      //   city: userOrder.city,
-      //   state: userOrder.state,
-      //   country: userOrder.country,
-      //   productName: userOrder.productName,
-      //   price: userOrder.price,
-      //   img: userOrder.img,
-      //   status: userOrder.status,
-      // };
       const result = await ordersCollection.insertOne(userOrder);
       res.json(result);
     });
+
+    // //update order after payment
+    // app.put('/orders/:id', async(req,res) => {
+
+    // })
 
     // get orders
     app.get('/orders', async (req, res) => {
@@ -137,12 +129,6 @@ async function run() {
     // post reviews to db
     app.post('/feedbacks', async (req, res) => {
       const userFeedback = req.body;
-      // const review = {
-      //   name: userFeedback.name,
-      //   email: userFeedback.email,
-      //   feedback: userFeedback.feedback,
-      //   productName: userFeedback.productName,
-      // };
       const result = await feedbacksCollection.insertOne(userFeedback);
       res.json(result);
     });
@@ -203,6 +189,18 @@ async function run() {
         isAdmin = true;
       }
       res.send({ admin: isAdmin });
+    });
+
+    // stripe payment
+    app.post('/create-payment-intent', async (req, res) => {
+      const paymentInfo = req.body;
+      const amount = paymentInfo.totalAmount * 100;
+      const paymentIntent = await stripe.paymentIntents.create({
+        currency: 'usd',
+        amount,
+        payment_method_types: ['card'],
+      });
+      res.json({ clientSecret: paymentIntent.client_secret });
     });
   } finally {
     // await client.close()
